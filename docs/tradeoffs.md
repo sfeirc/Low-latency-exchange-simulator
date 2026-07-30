@@ -204,5 +204,80 @@ enforced — both problems traced back to the same root cause (don't let
 capacity; enforce it yourself and never give `pool_resource` the chance to
 find out it's out of room).
 
-*(more sections land here as the corresponding components do: price-level
-structures.)*
+## Price-level structures: bitmap ladder vs. std::set vs. sorted vector
+
+**Decision:** `jane::book::OrderBook` uses the bitmap-scanned ladder
+(`LadderSide`, see the order book section above) as its price index. This
+section is the isolated, controlled comparison behind that choice — and it
+overturned the initial assumption partway through, which is the most
+important result here.
+
+**Setup:** `include/jane/book/price_index_variants.hpp` implements the
+*same* "track occupied prices, report the best" responsibility three ways
+(bitmap/bit-scan, `std::set`, sorted `std::vector`) with everything else —
+FIFO management, allocation — deliberately excluded, since those are
+identical regardless of this choice and already measured in
+`bench_order_book.cpp` / `bench_memory_pool.cpp`. Mixing them in would
+leave it ambiguous which variable caused a given result.
+
+**Data, scenario 1** (`artifacts/bench_order_book_backends.json`): book
+built from `depth` *uniformly random* prices drawn from a 65,536-tick
+range, then 5,000 steady-state ops of "erase the current best, insert a
+new random price":
+
+| Depth | Ladder (M ops/s) | `std::set` (M ops/s) | Sorted vector (M ops/s) |
+|---:|---:|---:|---:|
+| 20   |  8.8 | 41.9 | 92.4 |
+| 2000 | 17.5 | 15.2 | 18.9 |
+
+**Data, scenario 2** (`artifacts/bench_order_book.json`, from the order
+book's own benchmark): book built from 2,048 *consecutive* price levels
+(`0, 1, 2, ..., 2047`), same erase-best/insert churn pattern: **36.6M
+ops/s** for the ladder — roughly double scenario 1's depth-2000 number,
+on a comparable depth.
+
+**Reading the data — the ladder is not universally fastest:** at depth 20
+with scattered prices, the bitmap ladder is the *slowest* of the three by
+a wide margin (10.5x slower than the sorted vector), which directly
+contradicts what the order book's own benchmark (dense, consecutive
+levels) seemed to show. Both numbers are real; they're measuring different
+occupancy *patterns*, and the ladder's cost is driven by pattern, not just
+count:
+
+- `find_highest_at_or_below` after evicting the best price walks 64-bit
+  words until it hits one with a set bit. With 20 prices scattered
+  uniformly across 65,536 slots, the average gap between two occupied
+  slots is ~3,277 — about 51 empty 64-bit words to skip, on average,
+  *every single time the best price changes*. A sorted vector's `back()`
+  is one memory read regardless of how sparse the occupied set is, and
+  shifting 20 `int64_t` elements on insert/erase is fast enough (a handful
+  of nanoseconds) to not matter at this scale — this is the classic
+  regime where a flat, cache-friendly structure with worse Big-O beats a
+  cleverer one with better Big-O.
+- At depth 2,000 (still uniformly random), the average gap shrinks to
+  ~33 slots — about one word — so the bit-scan is cheap again, and the
+  ladder pulls back ahead of `std::set` (whose pointer-chasing tree
+  traversal is cache-unfriendly at any depth) while landing close to the
+  sorted vector.
+- At depth 2,048 *consecutive* levels (scenario 2), essentially every word
+  the scan touches has a set bit, so `find_highest_at_or_below` almost
+  always resolves within the same or adjacent word — the best case for
+  this data structure, and why that number is the highest of the three
+  scenarios.
+
+**What this means for the choice actually made:** real order books are
+not uniformly random across the full representable price range — resting
+orders cluster near the current touch (traders quote at or close to the
+best price, not scattered uniformly across a multi-percent band), which
+is structurally closer to scenario 2 (dense/local) than scenario 1
+(sparse/global). That clustering assumption is *why* the ladder is the
+right default here, not a universal "bitmaps are faster" claim — and
+scenario 1 exists specifically to show the assumption has a real cost
+when it doesn't hold, rather than asserting the clustering benefit
+without a counter-example to weigh it against. A venue expecting mostly
+resting liquidity scattered across a wide band with a thin book (closer
+to scenario 1's depth-20 row) would have a genuine case for the sorted
+vector instead. Neither this codebase nor this document tests real
+market-data clustering directly (e.g. a Gaussian/exponential distribution
+of resting prices around a moving touch) — that's a natural follow-up
+benchmark, called out here rather than silently assumed away.
