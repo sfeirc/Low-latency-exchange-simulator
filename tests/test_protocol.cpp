@@ -17,14 +17,13 @@ using namespace jane::protocol;
 TEST_CASE("NewOrderMessage round-trips through encode/decode", "[protocol]") {
     const NewOrderMessage msg{
         .order_id = 42,
-        .client_id = 7,
         .price = 10'050,
         .quantity = 100,
+        .client_id = 7,
         .symbol_id = 1,
         .side = Side::Buy,
         .order_type = OrderType::Limit,
         .time_in_force = TimeInForce::Day,
-        .reserved = 0,
     };
     std::array<std::byte, 128> buf{};
     const std::size_t written = encode(std::span(buf), msg);
@@ -56,7 +55,7 @@ TEST_CASE("CancelOrderMessage round-trips", "[protocol]") {
 
 TEST_CASE("ReplaceOrderMessage round-trips", "[protocol]") {
     const ReplaceOrderMessage msg{
-        .order_id = 5, .client_id = 6, .new_price = 200, .new_quantity = 50, .symbol_id = 1};
+        .order_id = 5, .new_price = 200, .new_quantity = 50, .client_id = 6, .symbol_id = 1};
     std::array<std::byte, 64> buf{};
     const std::size_t written = encode(std::span(buf), msg);
     const auto result = decode<ReplaceOrderMessage>(std::span(buf).first(written));
@@ -68,11 +67,11 @@ TEST_CASE("ReplaceOrderMessage round-trips", "[protocol]") {
 TEST_CASE("ExecutionReportMessage round-trips", "[protocol]") {
     const ExecutionReportMessage msg{
         .order_id = 1,
-        .client_id = 2,
         .match_id = 3,
         .price = 10'000,
         .last_quantity = 25,
         .leaves_quantity = 75,
+        .client_id = 2,
         .symbol_id = 1,
         .exec_type = ExecType::PartialFill,
         .reject_reason = RejectReason::None,
@@ -124,9 +123,9 @@ TEST_CASE("encode reports 0 and writes nothing when the buffer is too small", "[
 TEST_CASE("decode reports Incomplete on a truncated buffer, at every truncation point",
           "[protocol]") {
     const NewOrderMessage msg{.order_id = 1,
-                               .client_id = 1,
                                .price = 100,
                                .quantity = 10,
+                               .client_id = 1,
                                .symbol_id = 1,
                                .side = Side::Buy,
                                .order_type = OrderType::Limit,
@@ -170,9 +169,9 @@ TEST_CASE("peek_header + dispatch parses a stream of mixed message types in orde
     std::size_t offset = 0;
     offset += encode(std::span(stream).subspan(offset),
                       NewOrderMessage{.order_id = 1,
-                                      .client_id = 1,
                                       .price = 100,
                                       .quantity = 10,
+                                      .client_id = 1,
                                       .symbol_id = 1,
                                       .side = Side::Buy,
                                       .order_type = OrderType::Limit,

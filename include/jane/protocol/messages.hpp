@@ -47,38 +47,43 @@ static_assert(std::is_trivially_copyable_v<MessageHeader>);
 
 // --- order entry: client -> exchange ------------------------------------
 
+// client_id/symbol_id are uint32_t here (not uint64_t) specifically to
+// match jane::ClientId/SymbolId's underlying type (see core/types.hpp) —
+// an earlier version of this file used uint64_t for both, which meant
+// every wire-to-domain conversion was a silent narrowing conversion the
+// compiler warned about the first time replay_engine.hpp actually
+// performed one. Fixed at the source (the wire format) rather than by
+// casting at every conversion site.
 struct NewOrderMessage {
     std::uint64_t order_id;
-    std::uint64_t client_id;
-    std::int64_t price;     // ticks; ignored by the matching engine if order_type == Market
+    std::int64_t price;  // ticks; ignored by the matching engine if order_type == Market
     std::int64_t quantity;
+    std::uint32_t client_id;
     std::uint32_t symbol_id;
     Side side;
     OrderType order_type;
     TimeInForce time_in_force;
-    std::uint8_t reserved{0};
+    std::uint8_t reserved[5]{};
 };
 static_assert(sizeof(NewOrderMessage) == 40);
 static_assert(std::is_trivially_copyable_v<NewOrderMessage>);
 
 struct CancelOrderMessage {
     std::uint64_t order_id;
-    std::uint64_t client_id;
+    std::uint32_t client_id;
     std::uint32_t symbol_id;
-    std::uint8_t reserved[4]{};
 };
-static_assert(sizeof(CancelOrderMessage) == 24);
+static_assert(sizeof(CancelOrderMessage) == 16);
 static_assert(std::is_trivially_copyable_v<CancelOrderMessage>);
 
 struct ReplaceOrderMessage {
     std::uint64_t order_id;  // existing resting order being replaced
-    std::uint64_t client_id;
     std::int64_t new_price;
     std::int64_t new_quantity;
+    std::uint32_t client_id;
     std::uint32_t symbol_id;
-    std::uint8_t reserved[4]{};
 };
-static_assert(sizeof(ReplaceOrderMessage) == 40);
+static_assert(sizeof(ReplaceOrderMessage) == 32);
 static_assert(std::is_trivially_copyable_v<ReplaceOrderMessage>);
 
 // --- order entry: exchange -> client -------------------------------------
@@ -94,15 +99,15 @@ enum class ExecType : std::uint8_t {
 
 struct ExecutionReportMessage {
     std::uint64_t order_id;
-    std::uint64_t client_id;
     std::uint64_t match_id;         // 0 unless this event is a fill
     std::int64_t price;             // fill price; 0 unless this event is a fill
     std::int64_t last_quantity;     // quantity filled by this event; 0 unless a fill
     std::int64_t leaves_quantity;   // remaining open quantity after this event
+    std::uint32_t client_id;
     std::uint32_t symbol_id;
     ExecType exec_type;
     RejectReason reject_reason;     // meaningful only when exec_type == Rejected
-    std::uint8_t reserved[2]{};
+    std::uint8_t reserved[6]{};
 };
 static_assert(sizeof(ExecutionReportMessage) == 56);
 static_assert(std::is_trivially_copyable_v<ExecutionReportMessage>);

@@ -20,9 +20,9 @@ using namespace jane::protocol;
 
 static void bench_encode_new_order(benchmark::State& state) {
     const NewOrderMessage msg{.order_id = 1,
-                               .client_id = 1,
                                .price = 10'000,
                                .quantity = 100,
+                               .client_id = 1,
                                .symbol_id = 1,
                                .side = Side::Buy,
                                .order_type = OrderType::Limit,
@@ -36,9 +36,9 @@ BENCHMARK(bench_encode_new_order);
 
 static void bench_decode_new_order(benchmark::State& state) {
     const NewOrderMessage msg{.order_id = 1,
-                               .client_id = 1,
                                .price = 10'000,
                                .quantity = 100,
+                               .client_id = 1,
                                .symbol_id = 1,
                                .side = Side::Buy,
                                .order_type = OrderType::Limit,
@@ -54,11 +54,11 @@ BENCHMARK(bench_decode_new_order);
 
 static void bench_encode_decode_round_trip(benchmark::State& state) {
     const ExecutionReportMessage msg{.order_id = 1,
-                                      .client_id = 1,
                                       .match_id = 1,
                                       .price = 10'000,
                                       .last_quantity = 10,
                                       .leaves_quantity = 90,
+                                      .client_id = 1,
                                       .symbol_id = 1,
                                       .exec_type = ExecType::PartialFill,
                                       .reject_reason = RejectReason::None};

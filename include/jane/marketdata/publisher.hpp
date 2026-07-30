@@ -20,6 +20,12 @@
 // returned Fill list and `rested` flag — that bookkeeping belongs to the
 // driver loop (jane::replay), which has the full before/after context;
 // this class only knows how to encode and publish once told what to send.
+//
+// publish_execution_report also lives here even though execution reports
+// are conceptually a private per-client channel, not public market data —
+// routing both through the same Sink is a deliberate scope simplification
+// (see jane::replay::ReplayEngine's header comment) rather than building
+// a second publish path this project's scope doesn't need.
 namespace jane::marketdata {
 
 template <typename Sink>
@@ -38,6 +44,12 @@ public:
             .aggressor_side = fill.aggressor_side,
         };
         std::array<std::byte, 64> buf{};
+        const std::size_t n = protocol::encode(std::span(buf), msg);
+        sink_.write(std::span(buf).first(n));
+    }
+
+    void publish_execution_report(protocol::ExecutionReportMessage msg) {
+        std::array<std::byte, 128> buf{};
         const std::size_t n = protocol::encode(std::span(buf), msg);
         sink_.write(std::span(buf).first(n));
     }
