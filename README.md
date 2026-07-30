@@ -93,11 +93,14 @@ Useful CMake options (see root `CMakeLists.txt`):
 ## Running the benchmarks
 
 ```sh
-cmake -S . -B build -G Ninja -DCMAKE_BUILD_TYPE=Release -DJANE_BUILD_TESTS=OFF
-cmake --build build -j"$(nproc)"
-./tools/run_benchmarks.sh   # pins to an isolated core, writes artifacts/*.json
-python3 tools/analyze_benchmarks.py artifacts/*.json
+./tools/run_benchmarks.sh                              # builds Release itself, pins to an isolated core, writes artifacts/*.json
+python3 tools/analyze_benchmarks.py artifacts/*.json    # human-readable summary
 ```
+
+See [`docs/benchmarks.md`](docs/benchmarks.md) for the results this
+actually produced, and [`docs/tradeoffs.md`](docs/tradeoffs.md) for the
+comparative benchmarks (SPSC cached-vs-naive, MPSC fan-in-vs-CAS, price-index
+ladder-vs-tree-vs-vector, ...) behind each design decision.
 
 ## License
 

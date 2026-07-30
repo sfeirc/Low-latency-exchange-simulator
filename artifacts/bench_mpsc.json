@@ -1,10 +1,10 @@
 {
   "context": {
-    "date": "2026-07-30T19:08:37+02:00",
+    "date": "2026-07-30T20:47:25+02:00",
     "host_name": "cloooooo-server",
-    "executable": "/home/csfeir/Documents/JANE/build/bench/bench_mpsc",
+    "executable": "/home/csfeir/Documents/JANE/build-bench/bench/bench_mpsc",
     "num_cpus": 24,
-    "mhz_per_cpu": 4624,
+    "mhz_per_cpu": 3713,
     "cpu_scaling_enabled": false,
     "caches": [
       {
@@ -32,7 +32,7 @@
         "num_sharing": 12
       }
     ],
-    "load_avg": [3.03564,1.94873,1.91016],
+    "load_avg": [2.47412,2.22559,2.14111],
     "library_version": "1.9.1",
     "library_build_type": "debug",
     "json_schema_version": 1
@@ -48,10 +48,10 @@
       "repetition_index": 0,
       "threads": 1,
       "iterations": 10,
-      "real_time": 3.3187199605163187e+01,
-      "cpu_time": 3.3163188900000002e+01,
+      "real_time": 3.3067380194552243e+01,
+      "cpu_time": 3.3055387799999998e+01,
       "time_unit": "ms",
-      "items_per_second": 1.5797898172716944e+07
+      "items_per_second": 1.5855141741357997e+07
     },
     {
       "name": "MPSC/fanin_spsc/producers2/iterations:10/real_time",
@@ -63,10 +63,10 @@
       "repetition_index": 0,
       "threads": 1,
       "iterations": 10,
-      "real_time": 2.5203338603023440e+01,
-      "cpu_time": 2.5187585599999995e+01,
+      "real_time": 2.9864883399568498e+01,
+      "cpu_time": 2.9857282099999999e+01,
       "time_unit": "ms",
-      "items_per_second": 2.0802323384930655e+07
+      "items_per_second": 1.7555333901205692e+07
     },
     {
       "name": "MPSC/cas_shared/producers4/iterations:10/real_time",
@@ -78,10 +78,10 @@
       "repetition_index": 0,
       "threads": 1,
       "iterations": 10,
-      "real_time": 8.8390180899295956e+01,
-      "cpu_time": 8.8343173699999994e+01,
+      "real_time": 8.8563671405427158e+01,
+      "cpu_time": 8.8544263799999996e+01,
       "time_unit": "ms",
-      "items_per_second": 1.1863037153353672e+07
+      "items_per_second": 1.1839798230584009e+07
     },
     {
       "name": "MPSC/fanin_spsc/producers4/iterations:10/real_time",
@@ -93,10 +93,10 @@
       "repetition_index": 0,
       "threads": 1,
       "iterations": 10,
-      "real_time": 4.7849539190065116e+01,
-      "cpu_time": 4.7820692800000003e+01,
+      "real_time": 5.1659826503600925e+01,
+      "cpu_time": 5.1651118800000020e+01,
       "time_unit": "ms",
-      "items_per_second": 2.1914025040761799e+07
+      "items_per_second": 2.0297706573344946e+07
     },
     {
       "name": "MPSC/cas_shared/producers8/iterations:10/real_time",
@@ -108,10 +108,10 @@
       "repetition_index": 0,
       "threads": 1,
       "iterations": 10,
-      "real_time": 3.1632623659679666e+02,
-      "cpu_time": 3.1620428959999998e+02,
+      "real_time": 3.1155380599666387e+02,
+      "cpu_time": 3.1148664309999998e+02,
       "time_unit": "ms",
-      "items_per_second": 6.6297124846875165e+06
+      "items_per_second": 6.7312674717331370e+06
     },
     {
       "name": "MPSC/fanin_spsc/producers8/iterations:10/real_time",
@@ -123,10 +123,10 @@
       "repetition_index": 0,
       "threads": 1,
       "iterations": 10,
-      "real_time": 9.1883056901860982e+01,
-      "cpu_time": 9.1839584400000078e+01,
+      "real_time": 9.4607118598651141e+01,
+      "cpu_time": 9.4594359999999966e+01,
       "time_unit": "ms",
-      "items_per_second": 2.2824142673441295e+07
+      "items_per_second": 2.2166957741274029e+07
     }
   ]
 }

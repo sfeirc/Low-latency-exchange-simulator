@@ -1,10 +1,10 @@
 {
   "context": {
-    "date": "2026-07-30T19:02:24+02:00",
+    "date": "2026-07-30T20:47:36+02:00",
     "host_name": "cloooooo-server",
-    "executable": "/home/csfeir/Documents/JANE/build/bench/bench_spsc_ring_buffer",
+    "executable": "/home/csfeir/Documents/JANE/build-bench/bench/bench_spsc_ring_buffer",
     "num_cpus": 24,
-    "mhz_per_cpu": 4231,
+    "mhz_per_cpu": 3776,
     "cpu_scaling_enabled": false,
     "caches": [
       {
@@ -32,7 +32,7 @@
         "num_sharing": 12
       }
     ],
-    "load_avg": [1.53223,1.50098,1.88916],
+    "load_avg": [2.99072,2.34863,2.18213],
     "library_version": "1.9.1",
     "library_build_type": "debug",
     "json_schema_version": 1
@@ -48,10 +48,10 @@
       "repetition_index": 0,
       "threads": 1,
       "iterations": 20,
-      "real_time": 9.4083228497765958e+00,
-      "cpu_time": 9.3907780500000015e+00,
+      "real_time": 9.7029387485235929e+00,
+      "cpu_time": 9.6942816500000024e+00,
       "time_unit": "ms",
-      "items_per_second": 1.1145195767010683e+08
+      "items_per_second": 1.0806787790550075e+08
     },
     {
       "name": "SPSC/naive_reread/cap256/iterations:20/real_time",
@@ -63,10 +63,10 @@
       "repetition_index": 0,
       "threads": 1,
       "iterations": 20,
-      "real_time": 1.2930795800639316e+01,
-      "cpu_time": 1.2903384449999999e+01,
+      "real_time": 7.7493242977652699e+00,
+      "cpu_time": 7.7363426999999998e+00,
       "time_unit": "ms",
-      "items_per_second": 8.1091374124719918e+07
+      "items_per_second": 1.3531192652530822e+08
     },
     {
       "name": "SPSC/cached_index/cap4096/iterations:20/real_time",
@@ -78,10 +78,10 @@
       "repetition_index": 0,
       "threads": 1,
       "iterations": 20,
-      "real_time": 1.0355196602176875e+01,
-      "cpu_time": 1.0345243050000002e+01,
+      "real_time": 6.5617491491138935e+00,
+      "cpu_time": 6.5558840500000013e+00,
       "time_unit": "ms",
-      "items_per_second": 1.0126084904844470e+08
+      "items_per_second": 1.5980129324840176e+08
     },
     {
       "name": "SPSC/naive_reread/cap4096/iterations:20/real_time",
@@ -93,10 +93,10 @@
       "repetition_index": 0,
       "threads": 1,
       "iterations": 20,
-      "real_time": 1.2128635996486992e+01,
-      "cpu_time": 1.2114757049999998e+01,
+      "real_time": 8.7943214981351048e+00,
+      "cpu_time": 8.7880442500000022e+00,
       "time_unit": "ms",
-      "items_per_second": 8.6454569195061639e+07
+      "items_per_second": 1.1923330301517378e+08
     },
     {
       "name": "SPSC/cached_index/cap65536/iterations:20/real_time",
@@ -108,10 +108,10 @@
       "repetition_index": 0,
       "threads": 1,
       "iterations": 20,
-      "real_time": 4.9529539013747126e+00,
-      "cpu_time": 4.7896580500000008e+00,
+      "real_time": 6.5877476008608937e+00,
+      "cpu_time": 6.5830925499999964e+00,
       "time_unit": "ms",
-      "items_per_second": 2.1170719955801797e+08
+      "items_per_second": 1.5917063972866401e+08
     },
     {
       "name": "SPSC/naive_reread/cap65536/iterations:20/real_time",
@@ -123,10 +123,10 @@
       "repetition_index": 0,
       "threads": 1,
       "iterations": 20,
-      "real_time": 8.9283361507114023e+00,
-      "cpu_time": 8.8695717500000040e+00,
+      "real_time": 9.5446655002888292e+00,
+      "cpu_time": 9.5373731500000005e+00,
       "time_unit": "ms",
-      "items_per_second": 1.1744360677061318e+08
+      "items_per_second": 1.0985990027290839e+08
     },
     {
       "name": "SPSC/cached_index/cap4096/consumer_work/iterations:20/real_time",
@@ -138,10 +138,10 @@
       "repetition_index": 0,
       "threads": 1,
       "iterations": 20,
-      "real_time": 5.5486446479335427e+00,
-      "cpu_time": 5.5426240000000071e+00,
+      "real_time": 1.3549008651170880e+01,
+      "cpu_time": 1.3541461799999999e+01,
       "time_unit": "ms",
-      "items_per_second": 1.8897876265882635e+08
+      "items_per_second": 7.7391344783692643e+07
     },
     {
       "name": "SPSC/naive_reread/cap4096/consumer_work/iterations:20/real_time",
@@ -153,10 +153,10 @@
       "repetition_index": 0,
       "threads": 1,
       "iterations": 20,
-      "real_time": 7.1875817957334220e+00,
-      "cpu_time": 7.1817443499999971e+00,
+      "real_time": 1.3407440198352560e+01,
+      "cpu_time": 1.3398346750000002e+01,
       "time_unit": "ms",
-      "items_per_second": 1.4588717454630417e+08
+      "items_per_second": 7.8208515905134812e+07
     },
     {
       "name": "bench_spsc_single_threaded_roundtrip",
@@ -167,11 +167,11 @@
       "repetitions": 1,
       "repetition_index": 0,
       "threads": 1,
-      "iterations": 506343749,
-      "real_time": 1.3742963855130306e+00,
-      "cpu_time": 1.3737545242214495e+00,
+      "iterations": 494357240,
+      "real_time": 1.4125460688461131e+00,
+      "cpu_time": 1.4119128223954001e+00,
       "time_unit": "ns",
-      "items_per_second": 7.2793208857072330e+08
+      "items_per_second": 7.0825902572613263e+08
     }
   ]
 }

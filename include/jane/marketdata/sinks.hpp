@@ -27,6 +27,19 @@ public:
     [[nodiscard]] std::size_t size() const noexcept { return buffer_.size(); }
     void clear() noexcept { buffer_.clear(); }
 
+    // Pre-size the backing buffer. Not required for correctness — write()
+    // grows it automatically — but a long-running session that never
+    // calls this pays for std::vector's doubling reallocation strategy
+    // exactly like any other unreserved vector would: each doubling
+    // copies the *entire* buffer so far, so the cost of each one grows
+    // geometrically with how much has accumulated. This is not
+    // hypothetical: bench_end_to_end.cpp's first run showed a handful of
+    // multi-millisecond latency spikes at order indices that themselves
+    // doubled each time (655, 2576, 5133, ... 328802) — the signature of
+    // exactly this pattern — before this method existed and the
+    // benchmark started calling it. See docs/tradeoffs.md.
+    void reserve(std::size_t bytes) { buffer_.reserve(bytes); }
+
 private:
     std::vector<std::byte> buffer_;
 };

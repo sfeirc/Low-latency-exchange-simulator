@@ -1,0 +1,128 @@
+{
+  "context": {
+    "date": "2026-07-30T20:47:11+02:00",
+    "host_name": "cloooooo-server",
+    "executable": "/home/csfeir/Documents/JANE/build-bench/bench/bench_end_to_end",
+    "num_cpus": 24,
+    "mhz_per_cpu": 4525,
+    "cpu_scaling_enabled": false,
+    "caches": [
+      {
+        "type": "Data",
+        "level": 1,
+        "size": 32768,
+        "num_sharing": 2
+      },
+      {
+        "type": "Instruction",
+        "level": 1,
+        "size": 32768,
+        "num_sharing": 2
+      },
+      {
+        "type": "Unified",
+        "level": 2,
+        "size": 524288,
+        "num_sharing": 2
+      },
+      {
+        "type": "Unified",
+        "level": 3,
+        "size": 33554432,
+        "num_sharing": 12
+      }
+    ],
+    "load_avg": [2.60986,2.23779,2.14404],
+    "library_version": "1.9.1",
+    "library_build_type": "debug",
+    "json_schema_version": 1
+  },
+  "benchmarks": [
+    {
+      "name": "bench_measurement_overhead/iterations:1",
+      "family_index": 0,
+      "per_family_instance_index": 0,
+      "run_name": "bench_measurement_overhead/iterations:1",
+      "run_type": "iteration",
+      "repetitions": 1,
+      "repetition_index": 0,
+      "threads": 1,
+      "iterations": 1,
+      "real_time": 4.4456869363784790e+00,
+      "cpu_time": 4.4451120000000008e+00,
+      "time_unit": "ms",
+      "max_ns": 5.4300000000000000e+03,
+      "mean_ns": 2.1311319999999998e+01,
+      "min_ns": 2.0000000000000000e+01,
+      "p50_ns": 2.0000000000000000e+01,
+      "p99_9_ns": 4.0000000000000000e+01,
+      "p99_ns": 3.0000000000000000e+01,
+      "samples": 1.0000000000000000e+05
+    },
+    {
+      "name": "bench_order_book_percentiles/iterations:1",
+      "family_index": 1,
+      "per_family_instance_index": 0,
+      "run_name": "bench_order_book_percentiles/iterations:1",
+      "run_type": "iteration",
+      "repetitions": 1,
+      "repetition_index": 0,
+      "threads": 1,
+      "iterations": 1,
+      "real_time": 1.4802267076447606e+01,
+      "cpu_time": 1.4792748000000000e+01,
+      "time_unit": "ms",
+      "max_ns": 1.9960000000000000e+04,
+      "mean_ns": 5.0783810000000003e+01,
+      "min_ns": 4.0000000000000000e+01,
+      "p50_ns": 5.0000000000000000e+01,
+      "p99_9_ns": 1.0000000000000000e+02,
+      "p99_ns": 8.0000000000000000e+01,
+      "samples": 2.0000000000000000e+05
+    },
+    {
+      "name": "bench_matching_engine_percentiles/iterations:1",
+      "family_index": 2,
+      "per_family_instance_index": 0,
+      "run_name": "bench_matching_engine_percentiles/iterations:1",
+      "run_type": "iteration",
+      "repetitions": 1,
+      "repetition_index": 0,
+      "threads": 1,
+      "iterations": 1,
+      "real_time": 6.9251123932190239e+01,
+      "cpu_time": 6.9238137000000009e+01,
+      "time_unit": "ms",
+      "max_ns": 1.6931000000000000e+04,
+      "mean_ns": 3.2389103999999998e+02,
+      "min_ns": 3.0000000000000000e+02,
+      "p50_ns": 3.1000000000000000e+02,
+      "p99_9_ns": 7.2000000000000000e+02,
+      "p99_ns": 6.6000000000000000e+02,
+      "samples": 2.0000000000000000e+05
+    },
+    {
+      "name": "bench_end_to_end_pipeline_percentiles/iterations:1",
+      "family_index": 3,
+      "per_family_instance_index": 0,
+      "run_name": "bench_end_to_end_pipeline_percentiles/iterations:1",
+      "run_type": "iteration",
+      "repetitions": 1,
+      "repetition_index": 0,
+      "threads": 1,
+      "iterations": 1,
+      "real_time": 1.3463994197081774e+02,
+      "cpu_time": 1.3461468300000001e+02,
+      "time_unit": "ms",
+      "max_ns": 1.7796300000000000e+05,
+      "mean_ns": 2.1623961600000001e+02,
+      "min_ns": 9.0000000000000000e+01,
+      "near_capacity_events": 0.0000000000000000e+00,
+      "p50_ns": 1.1000000000000000e+02,
+      "p99_9_ns": 4.0900000000000000e+03,
+      "p99_ns": 1.6800000000000000e+03,
+      "resting_at_end": 8.8687000000000000e+04,
+      "samples": 5.0000000000000000e+05
+    }
+  ]
+}

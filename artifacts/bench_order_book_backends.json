@@ -1,10 +1,10 @@
 {
   "context": {
-    "date": "2026-07-30T19:45:49+02:00",
+    "date": "2026-07-30T20:47:33+02:00",
     "host_name": "cloooooo-server",
-    "executable": "/home/csfeir/Documents/JANE/build/bench/bench_order_book_backends",
+    "executable": "/home/csfeir/Documents/JANE/build-bench/bench/bench_order_book_backends",
     "num_cpus": 24,
-    "mhz_per_cpu": 3730,
+    "mhz_per_cpu": 4035,
     "cpu_scaling_enabled": false,
     "caches": [
       {
@@ -32,7 +32,7 @@
         "num_sharing": 12
       }
     ],
-    "load_avg": [1.25195,1.46631,1.54443],
+    "load_avg": [2.99072,2.34863,2.18213],
     "library_version": "1.9.1",
     "library_build_type": "debug",
     "json_schema_version": 1
@@ -48,10 +48,10 @@
       "repetition_index": 0,
       "threads": 1,
       "iterations": 200,
-      "real_time": 6.5048422839026898e+02,
-      "cpu_time": 6.5038988999999981e+02,
+      "real_time": 5.7123233156744391e+02,
+      "cpu_time": 5.7098885000000018e+02,
       "time_unit": "us",
-      "items_per_second": 7.6876963754771799e+06
+      "items_per_second": 8.7567384196731653e+06
     },
     {
       "name": "PriceIndex/tree_stdset/depth20/iterations:200",
@@ -63,10 +63,10 @@
       "repetition_index": 0,
       "threads": 1,
       "iterations": 200,
-      "real_time": 1.1731036938726902e+02,
-      "cpu_time": 1.1730616499999887e+02,
+      "real_time": 1.2294004671275616e+02,
+      "cpu_time": 1.2293496499999959e+02,
       "time_unit": "us",
-      "items_per_second": 4.2623505763742663e+07
+      "items_per_second": 4.0671911363866389e+07
     },
     {
       "name": "PriceIndex/flat_sorted_vector/depth20/iterations:200",
@@ -78,10 +78,10 @@
       "repetition_index": 0,
       "threads": 1,
       "iterations": 200,
-      "real_time": 5.4051886545494199e+01,
-      "cpu_time": 5.4049780000000325e+01,
+      "real_time": 5.4442893597297370e+01,
+      "cpu_time": 5.4437230000001229e+01,
       "time_unit": "us",
-      "items_per_second": 9.2507314553361177e+07
+      "items_per_second": 9.1848905611102685e+07
     },
     {
       "name": "PriceIndex/ladder_bitmap/depth2000/iterations:200",
@@ -93,10 +93,10 @@
       "repetition_index": 0,
       "threads": 1,
       "iterations": 200,
-      "real_time": 2.9414345452096313e+02,
-      "cpu_time": 2.9407635499999833e+02,
+      "real_time": 2.6104207383468747e+02,
+      "cpu_time": 2.6098354500000073e+02,
       "time_unit": "us",
-      "items_per_second": 1.7002387016120449e+07
+      "items_per_second": 1.9158295976092998e+07
     },
     {
       "name": "PriceIndex/tree_stdset/depth2000/iterations:200",
@@ -108,10 +108,10 @@
       "repetition_index": 0,
       "threads": 1,
       "iterations": 200,
-      "real_time": 3.2454775762744248e+02,
-      "cpu_time": 3.2449282499999953e+02,
+      "real_time": 3.4169080667197704e+02,
+      "cpu_time": 3.4159824499999769e+02,
       "time_unit": "us",
-      "items_per_second": 1.5408661193047972e+07
+      "items_per_second": 1.4637077541191800e+07
     },
     {
       "name": "PriceIndex/flat_sorted_vector/depth2000/iterations:200",
@@ -123,10 +123,10 @@
       "repetition_index": 0,
       "threads": 1,
       "iterations": 200,
-      "real_time": 2.6833753508981317e+02,
-      "cpu_time": 2.6823155999999818e+02,
+      "real_time": 2.7170012413989753e+02,
+      "cpu_time": 2.7169480500000037e+02,
       "time_unit": "us",
-      "items_per_second": 1.8640610374111209e+07
+      "items_per_second": 1.8403001853495114e+07
     }
   ]
 }

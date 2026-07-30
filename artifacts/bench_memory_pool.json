@@ -1,10 +1,10 @@
 {
   "context": {
-    "date": "2026-07-30T19:17:09+02:00",
+    "date": "2026-07-30T20:47:20+02:00",
     "host_name": "cloooooo-server",
-    "executable": "/home/csfeir/Documents/JANE/build/bench/bench_memory_pool",
+    "executable": "/home/csfeir/Documents/JANE/build-bench/bench/bench_memory_pool",
     "num_cpus": 24,
-    "mhz_per_cpu": 4614,
+    "mhz_per_cpu": 4524,
     "cpu_scaling_enabled": false,
     "caches": [
       {
@@ -32,7 +32,7 @@
         "num_sharing": 12
       }
     ],
-    "load_avg": [1.52148,1.9248,1.98389],
+    "load_avg": [2.51562,2.22949,2.14209],
     "library_version": "1.9.1",
     "library_build_type": "debug",
     "json_schema_version": 1
@@ -47,9 +47,9 @@
       "repetitions": 1,
       "repetition_index": 0,
       "threads": 1,
-      "iterations": 354833837,
-      "real_time": 1.9886901315854661e+00,
-      "cpu_time": 1.9883399423375741e+00,
+      "iterations": 237154695,
+      "real_time": 2.9738243935859603e+00,
+      "cpu_time": 2.9721992178986798e+00,
       "time_unit": "ns"
     },
     {
@@ -61,9 +61,9 @@
       "repetitions": 1,
       "repetition_index": 0,
       "threads": 1,
-      "iterations": 48568951,
-      "real_time": 1.4324894930125643e+01,
-      "cpu_time": 1.4322707422690682e+01,
+      "iterations": 47365356,
+      "real_time": 1.4755774999569191e+01,
+      "cpu_time": 1.4752086250549874e+01,
       "time_unit": "ns"
     },
     {
@@ -75,9 +75,9 @@
       "repetitions": 1,
       "repetition_index": 0,
       "threads": 1,
-      "iterations": 93728116,
-      "real_time": 6.6867162363622734e+00,
-      "cpu_time": 6.6854736309860305e+00,
+      "iterations": 97597841,
+      "real_time": 6.8780914536885884e+00,
+      "cpu_time": 6.8750070301247748e+00,
       "time_unit": "ns"
     },
     {
@@ -89,11 +89,11 @@
       "repetitions": 1,
       "repetition_index": 0,
       "threads": 1,
-      "iterations": 63347,
-      "real_time": 1.1288196931246729e+01,
-      "cpu_time": 1.1284933856378368e+01,
+      "iterations": 62431,
+      "real_time": 1.1317598933327437e+01,
+      "cpu_time": 1.1311640050615880e+01,
       "time_unit": "us",
-      "items_per_second": 3.6296180838356411e+08
+      "items_per_second": 3.6210487441889447e+08
     },
     {
       "name": "bench_pmr_pool_churn",
@@ -104,11 +104,11 @@
       "repetitions": 1,
       "repetition_index": 0,
       "threads": 1,
-      "iterations": 7331,
-      "real_time": 9.7351475659305081e+01,
-      "cpu_time": 9.7326672350293236e+01,
+      "iterations": 7235,
+      "real_time": 9.8193384518392477e+01,
+      "cpu_time": 9.8164645888044248e+01,
       "time_unit": "us",
-      "items_per_second": 4.2085071862499148e+07
+      "items_per_second": 4.1725816488671958e+07
     },
     {
       "name": "bench_global_new_delete_churn",
@@ -119,11 +119,11 @@
       "repetitions": 1,
       "repetition_index": 0,
       "threads": 1,
-      "iterations": 6317,
-      "real_time": 1.1196270033225325e+02,
-      "cpu_time": 1.1193253458920380e+02,
+      "iterations": 6236,
+      "real_time": 1.1365458418091256e+02,
+      "cpu_time": 1.1358847370109038e+02,
       "time_unit": "us",
-      "items_per_second": 3.6593471371236779e+07
+      "items_per_second": 3.6059996816038571e+07
     }
   ]
 }

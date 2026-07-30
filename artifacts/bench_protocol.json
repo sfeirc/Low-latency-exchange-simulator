@@ -1,10 +1,10 @@
 {
   "context": {
-    "date": "2026-07-30T19:25:01+02:00",
+    "date": "2026-07-30T20:47:34+02:00",
     "host_name": "cloooooo-server",
-    "executable": "/home/csfeir/Documents/JANE/build/bench/bench_protocol",
+    "executable": "/home/csfeir/Documents/JANE/build-bench/bench/bench_protocol",
     "num_cpus": 24,
-    "mhz_per_cpu": 4601,
+    "mhz_per_cpu": 3688,
     "cpu_scaling_enabled": false,
     "caches": [
       {
@@ -32,7 +32,7 @@
         "num_sharing": 12
       }
     ],
-    "load_avg": [2.02393,1.94482,1.92432],
+    "load_avg": [2.99072,2.34863,2.18213],
     "library_version": "1.9.1",
     "library_build_type": "debug",
     "json_schema_version": 1
@@ -47,9 +47,9 @@
       "repetitions": 1,
       "repetition_index": 0,
       "threads": 1,
-      "iterations": 755320342,
-      "real_time": 8.5945847987591406e-01,
-      "cpu_time": 8.5931927674734865e-01,
+      "iterations": 809003824,
+      "real_time": 8.6557133493257676e-01,
+      "cpu_time": 8.6509826806455259e-01,
       "time_unit": "ns"
     },
     {
@@ -61,9 +61,9 @@
       "repetitions": 1,
       "repetition_index": 0,
       "threads": 1,
-      "iterations": 96766387,
-      "real_time": 7.3126237625923824e+00,
-      "cpu_time": 7.3100505550548265e+00,
+      "iterations": 88922683,
+      "real_time": 7.3555933638875199e+00,
+      "cpu_time": 7.3520743070696613e+00,
       "time_unit": "ns"
     },
     {
@@ -75,9 +75,9 @@
       "repetitions": 1,
       "repetition_index": 0,
       "threads": 1,
-      "iterations": 58968372,
-      "real_time": 1.1909028079038755e+01,
-      "cpu_time": 1.1905187733519254e+01,
+      "iterations": 58280786,
+      "real_time": 1.2001401370438774e+01,
+      "cpu_time": 1.1998323358233366e+01,
       "time_unit": "ns"
     }
   ]
