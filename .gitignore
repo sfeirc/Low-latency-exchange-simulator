@@ -19,12 +19,14 @@ install_manifest.txt
 *.swp
 .DS_Store
 
-# Generated data (regenerate via tools/apps, don't version large binaries)
+# Large regeneratable inputs (synthetic/replayed market data) — regenerate
+# via apps/synth_gen or apps/replay_tool, don't version.
 data/recordings/*.bin
 data/recordings/*.jsonl
-artifacts/*.json
-artifacts/*.html
-!artifacts/.gitkeep
+
+# artifacts/*.json (benchmark results) and artifacts/*.html (the book
+# animation) are intentionally NOT ignored: they're the receipts behind
+# docs/benchmarks.md and a required deliverable, not build output.
 
 # Unrelated local plugin state
 ruvector.db
