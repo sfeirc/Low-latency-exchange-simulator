@@ -130,5 +130,79 @@ queue's lack of a registration step genuinely useful despite its worse
 throughput under contention — that's a real scenario where the measured
 "loser" here would be the right call.
 
+## Memory: hand-rolled slab pool vs. std::pmr
+
+**Decision:** `jane::SlabPool` (two parallel fixed-size arrays: raw aligned
+storage, and an index-based intrusive freelist) is the pool actually used
+on the hot path. `jane::PmrPool` (`std::pmr::unsynchronized_pool_resource`
+over a `std::pmr::monotonic_buffer_resource`) exists as a standard-library
+comparison baseline, per the suggested stack. Both are fixed-capacity —
+`allocate()` never calls into the OS or global allocator after
+construction, and both signal exhaustion instead of silently growing
+(`nullptr` for SlabPool, `bad_alloc` for PmrPool — see below for why that
+difference is more consequential than it looks).
+
+**Data** (`artifacts/bench_memory_pool.json`, single-threaded, ~48-byte
+object matching `Order`'s shape):
+
+| Pattern | SlabPool | PmrPool | `new`/`delete` |
+|---|---:|---:|---:|
+| Immediate cycle (alloc, dealloc same slot) | 1.08 ns | 14.6 ns | 6.80 ns |
+| Churn (batch alloc, interleaved free, refill) | 366.7 M items/s | 41.9 M items/s | 37.4 M items/s |
+
+**Reading the data:** SlabPool wins both patterns by a wide margin (6–13x),
+which is the expected outcome, not a surprise — it does strictly less work
+than either alternative: no virtual dispatch (`PmrPool` goes through
+`memory_resource`'s virtual `do_allocate`/`do_deallocate` on every call),
+no size-class/bucket lookup, just an index read and a placement-new. The
+genuine surprise is that **`PmrPool` is slower than raw global `new`/`delete`**
+in the immediate-cycle pattern (14.6 ns vs. 6.8 ns) despite `new`/`delete`
+being the thing this whole exercise is nominally optimizing away from. The
+likely explanation: glibc's allocator keeps a per-thread `tcache` — a small
+per-size free list that makes "free this exact size, then immediately
+`malloc` that exact size again" close to its best case, which is exactly
+the immediate-cycle pattern. `PmrPool`'s extra indirection (virtual calls,
+pool bucket lookup) can't beat that fast path for this specific access
+pattern, even though it wins once the pattern is less LIFO-friendly
+(churn: 41.9 vs. 37.4 M items/s). Neither pmr number is anywhere near
+SlabPool's, but "does pmr even reliably beat the thing it's replacing" is
+a fair question to ask before adopting it, and the honest answer here is
+"only sometimes, and not by much" — the real win in this codebase comes
+from the hand-rolled pool, not from moving off the global allocator per se.
+
+**A correctness finding, not just a performance one:** getting `PmrPool` to
+a fixed-capacity contract at all took two fixes past the obvious
+implementation, both caught by `tests/test_memory_pool.cpp` rather than
+anticipated up front:
+
+1. `pool_options.max_blocks_per_chunk` bounds how many blocks a single
+   upstream *replenishment* may request — it is not a total-capacity
+   ceiling. `unsynchronized_pool_resource` will go back to its upstream for
+   another chunk once a size class's free list runs dry again, so a
+   generously-sized upstream buffer doesn't cap total allocations at the
+   intended capacity; it just delays the point at which capacity stops
+   being enforced.
+2. Sizing the upstream buffer *tightly* to force the second chunk request
+   to fail (so exhaustion is signaled by the upstream throwing) doesn't
+   just misbehave — on this project's toolchain, **GCC 15.2 / libstdc++,
+   `unsynchronized_pool_resource::do_allocate` segfaults on the call
+   *after* its upstream throws `bad_alloc`**, reproduced in a ~30-line
+   standalone program outside this codebase with no sanitizer required
+   (`AddressSanitizer: SEGV ... in std::pmr::unsynchronized_pool_resource::do_allocate`,
+   and the same crash with no sanitizer at all, exit code 139). Relying on
+   "the upstream throws when exhausted" as the exhaustion signal is
+   therefore not just imprecise, it's unsafe on this standard library
+   version.
+
+The fix sidesteps both issues the same way: `PmrPool` tracks `live_count_`
+itself and refuses at exactly `capacity`, strictly *before* ever calling
+into `pool_resource`. That makes it mathematically impossible for the
+pool to ever ask its upstream for a second chunk, which means the libstdc++
+crash path can never trigger and the declared capacity is exactly
+enforced — both problems traced back to the same root cause (don't let
+`pool_resource`'s own chunk-growth policy be the thing enforcing your
+capacity; enforce it yourself and never give `pool_resource` the chance to
+find out it's out of room).
+
 *(more sections land here as the corresponding components do: price-level
-structures, allocation strategy.)*
+structures.)*
