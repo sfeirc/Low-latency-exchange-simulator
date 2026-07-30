@@ -2,6 +2,7 @@ set(JANE_TEST_SOURCES
   test_version.cpp
   test_core_types.cpp
   test_spsc_ring_buffer.cpp
+  test_mpsc.cpp
 )
 
 add_executable(jane_tests ${JANE_TEST_SOURCES})

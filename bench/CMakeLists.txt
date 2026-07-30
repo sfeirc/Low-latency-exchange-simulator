@@ -13,3 +13,4 @@ function(jane_add_benchmark name)
 endfunction()
 
 jane_add_benchmark(bench_spsc_ring_buffer bench_spsc_ring_buffer.cpp)
+jane_add_benchmark(bench_mpsc bench_mpsc.cpp)

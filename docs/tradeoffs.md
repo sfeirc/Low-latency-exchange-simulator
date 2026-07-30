@@ -80,5 +80,55 @@ This is a hypothesis, not (yet) a measurement — a slot-padding variant is a
 candidate for a follow-up benchmark if profiling ever points at that
 boundary specifically.
 
+## Concurrency: N-producer order entry — SPSC fan-in vs. CAS-based MPSC
+
+**Decision:** the primary order-entry path (`jane::FanInSequencer`) gives
+each client/gateway thread its own private `SPSCRingBuffer`, round-robin
+drained by a single sequencer thread — not a single shared buffer that all
+producers push into concurrently (`jane::MPSCRingBuffer`, a from-scratch
+implementation of Vyukov's bounded MPMC queue specialized to one consumer).
+Both are implemented and tested; only the fan-in design is used downstream.
+
+**Data** (`artifacts/bench_mpsc.json`, producers pinned to physical cores
+0..N-1, consumer pinned to core 11, 32-byte messages, 2^18 messages/producer,
+`Iterations=10`):
+
+| Producers | CAS-shared MPSC (M items/s) | SPSC fan-in (M items/s) | Fan-in advantage |
+|---:|---:|---:|---:|
+| 2 | 15.9 |  18.7 | +18% |
+| 4 | 11.6 |  19.2 | +65% |
+| 8 |  6.8 |  22.5 | +230% |
+
+**Reading the data:** this is the cleanest result in the whole benchmark
+suite because it has an obvious mechanism behind it. Every producer in the
+CAS design contends on the *same* cache line (`enqueue_pos_`) for every
+single message — more producers means more compare-exchange retries, so
+throughput *degrades* as producers are added (15.9 → 6.8 M/s, 2→8
+producers). The fan-in design gives each producer a private queue it never
+shares with another producer, so producer-side contention is structurally
+zero regardless of producer count; its only shared resource is the
+consumer's round-robin scan, which is read-only from the producers'
+perspective. Throughput doesn't just win, it trends the *opposite direction*
+as load increases (18.7 → 22.5 M/s, 2→8 producers) — more queues to
+round-robin costs the consumer a few more empty-queue checks per drained
+message, which is far cheaper than the CAS retries it's avoiding.
+
+**Why implement the CAS version at all, then, if it's not used?** Two
+reasons. First, this is a "measure, don't assert" project — claiming the
+simpler design is faster without the harder one to compare against would be
+an opinion, not a result. Second, the fan-in design isn't free of
+trade-offs itself: it requires the caller to know the producer count up
+front (a template parameter) and to route each client to a specific,
+fixed queue index, whereas the CAS-based queue accepts pushes from an
+unbounded, unknown set of threads with no registration step. For this
+project — a fixed set of client-gateway threads spun up at startup — that's
+not a real constraint, which is exactly why fan-in is the better fit *here*.
+A system that needs to accept order flow from an arbitrary, dynamically
+changing set of connections (say, a naive thread-per-connection server
+that spawns and destroys threads per client session) would find the CAS
+queue's lack of a registration step genuinely useful despite its worse
+throughput under contention — that's a real scenario where the measured
+"loser" here would be the right call.
+
 *(more sections land here as the corresponding components do: price-level
-structures, allocation strategy, MPSC fan-in vs. CAS.)*
+structures, allocation strategy.)*
