@@ -5,6 +5,9 @@ set(JANE_TEST_SOURCES
   test_mpsc.cpp
   test_memory_pool.cpp
   test_protocol.cpp
+  test_bitmap.cpp
+  test_price_level.cpp
+  test_order_book.cpp
 )
 
 add_executable(jane_tests ${JANE_TEST_SOURCES})

@@ -1,0 +1,85 @@
+{
+  "context": {
+    "date": "2026-07-30T19:40:38+02:00",
+    "host_name": "cloooooo-server",
+    "executable": "/home/csfeir/Documents/JANE/build/bench/bench_order_book",
+    "num_cpus": 24,
+    "mhz_per_cpu": 3703,
+    "cpu_scaling_enabled": false,
+    "caches": [
+      {
+        "type": "Data",
+        "level": 1,
+        "size": 32768,
+        "num_sharing": 2
+      },
+      {
+        "type": "Instruction",
+        "level": 1,
+        "size": 32768,
+        "num_sharing": 2
+      },
+      {
+        "type": "Unified",
+        "level": 2,
+        "size": 524288,
+        "num_sharing": 2
+      },
+      {
+        "type": "Unified",
+        "level": 3,
+        "size": 33554432,
+        "num_sharing": 12
+      }
+    ],
+    "load_avg": [1.62158,1.40674,1.55273],
+    "library_version": "1.9.1",
+    "library_build_type": "debug",
+    "json_schema_version": 1
+  },
+  "benchmarks": [
+    {
+      "name": "bench_add_cancel_same_level",
+      "family_index": 0,
+      "per_family_instance_index": 0,
+      "run_name": "bench_add_cancel_same_level",
+      "run_type": "iteration",
+      "repetitions": 1,
+      "repetition_index": 0,
+      "threads": 1,
+      "iterations": 27369978,
+      "real_time": 2.4500180783273372e+01,
+      "cpu_time": 2.4495100471034359e+01,
+      "time_unit": "ns"
+    },
+    {
+      "name": "bench_best_bid_query",
+      "family_index": 1,
+      "per_family_instance_index": 0,
+      "run_name": "bench_best_bid_query",
+      "run_type": "iteration",
+      "repetitions": 1,
+      "repetition_index": 0,
+      "threads": 1,
+      "iterations": 105033890,
+      "real_time": 6.7012089722992991e+00,
+      "cpu_time": 6.6957162016945198e+00,
+      "time_unit": "ns"
+    },
+    {
+      "name": "bench_churn_across_levels",
+      "family_index": 2,
+      "per_family_instance_index": 0,
+      "run_name": "bench_churn_across_levels",
+      "run_type": "iteration",
+      "repetitions": 1,
+      "repetition_index": 0,
+      "threads": 1,
+      "iterations": 12633,
+      "real_time": 5.5740105367440286e+01,
+      "cpu_time": 5.5715440512942294e+01,
+      "time_unit": "us",
+      "items_per_second": 3.6758212465793289e+07
+    }
+  ]
+}
