@@ -40,23 +40,20 @@ render the same book live as an ANSI terminal ladder:
 
 ```mermaid
 flowchart TD
-    C0["Client 0"] --> Q0[["SPSC queue"]]
-    C1["Client 1"] --> Q1[["SPSC queue"]]
-    CN["Client N"] --> QN[["SPSC queue"]]
-
-    subgraph ST["Single sequencer thread — lock-free by construction, not by locking"]
-        direction TB
-        Q0 & Q1 & QN --> SEQ["FanInSequencer<br/>round-robin drain"]
-        SEQ -->|"assign Sequence + Nanos"| RISK{"RiskEngine::<br/>check_new_order"}
-        RISK -->|reject| REJ["ExecutionReport: Rejected"]
-        RISK -->|accept| MATCH["MatchingEngine::submit<br/>FIFO match, then rest remainder"]
-        MATCH --> FILLS["Fills"]
-        FILLS --> RECORD["RiskEngine::record_fill<br/>(both sides of every fill)"]
-        FILLS --> MD["MarketDataPublisher<br/>trade + book-level deltas"]
-        MATCH --> EXR["ExecutionReport<br/>New / PartialFill / Fill"]
-    end
-
-    MD --> SINK[("Sink<br/>InMemorySink / FileSink / socket")]
+    C0["Client 0"] --> Q0["SPSC queue"]
+    C1["Client 1"] --> Q1["SPSC queue"]
+    CN["Client N"] --> QN["SPSC queue"]
+    Q0 --> SEQ["FanInSequencer, round-robin drain"]
+    Q1 --> SEQ
+    QN --> SEQ
+    SEQ --> RISK["RiskEngine.check_new_order"]
+    RISK -->|reject| REJ["ExecutionReport: Rejected"]
+    RISK -->|accept| MATCH["MatchingEngine.submit, FIFO match then rest remainder"]
+    MATCH --> FILLS["Fills"]
+    FILLS --> RECORD["RiskEngine.record_fill, both sides"]
+    FILLS --> MD["MarketDataPublisher, trade plus level deltas"]
+    MATCH --> EXR["ExecutionReport: New, PartialFill, or Fill"]
+    MD --> SINK["Sink: InMemorySink, FileSink, or socket"]
     REJ --> SINK
     EXR --> SINK
 ```
