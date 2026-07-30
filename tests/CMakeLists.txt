@@ -1,5 +1,6 @@
 set(JANE_TEST_SOURCES
   test_version.cpp
+  test_core_types.cpp
 )
 
 add_executable(jane_tests ${JANE_TEST_SOURCES})
