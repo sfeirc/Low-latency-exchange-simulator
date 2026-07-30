@@ -14,6 +14,7 @@ struct SequenceTag {};
 struct SymbolIdTag {};
 struct ClientIdTag {};
 struct NanosTag {};
+struct PnLTag {};
 }  // namespace tag
 
 // Price is an integer number of ticks, never a float: floating point
@@ -38,6 +39,13 @@ using ClientId = StrongId<std::uint32_t, tag::ClientIdTag>;
 // Nanoseconds, monotonic clock, never wall-clock: used for both real
 // timestamps and deterministic replay (see jane/replay).
 using Nanos = StrongAmount<std::int64_t, tag::NanosTag>;
+
+// Signed money-like quantity — price * quantity, e.g. cash flow or P&L.
+// Deliberately its own type rather than reusing Price or Quantity: it has
+// different units than either (see jane::risk::RiskEngine) and mixing it
+// with a bare Price or Quantity by accident is exactly the class of bug
+// the strong-type scheme throughout core/ exists to catch at compile time.
+using PnL = StrongAmount<std::int64_t, tag::PnLTag>;
 
 enum class Side : std::uint8_t { Buy = 0, Sell = 1 };
 
