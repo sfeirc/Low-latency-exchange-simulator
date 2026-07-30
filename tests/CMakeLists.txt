@@ -16,6 +16,9 @@ set(JANE_TEST_SOURCES
   test_replay_engine.cpp
   test_synthetic_generator.cpp
   test_histogram.cpp
+  test_strategy_market_maker.cpp
+  test_strategy_vwap.cpp
+  test_strategy_arbitrage.cpp
 )
 
 add_executable(jane_tests ${JANE_TEST_SOURCES})
