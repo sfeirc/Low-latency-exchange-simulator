@@ -1,0 +1,140 @@
+{
+  "context": {
+    "date": "2026-07-30T20:00:28+02:00",
+    "host_name": "cloooooo-server",
+    "executable": "/home/csfeir/Documents/JANE/build/bench/bench_matching_engine",
+    "num_cpus": 24,
+    "mhz_per_cpu": 3740,
+    "cpu_scaling_enabled": false,
+    "caches": [
+      {
+        "type": "Data",
+        "level": 1,
+        "size": 32768,
+        "num_sharing": 2
+      },
+      {
+        "type": "Instruction",
+        "level": 1,
+        "size": 32768,
+        "num_sharing": 2
+      },
+      {
+        "type": "Unified",
+        "level": 2,
+        "size": 524288,
+        "num_sharing": 2
+      },
+      {
+        "type": "Unified",
+        "level": 3,
+        "size": 33554432,
+        "num_sharing": 12
+      }
+    ],
+    "load_avg": [6.75342,5.66553,3.33691],
+    "library_version": "1.9.1",
+    "library_build_type": "debug",
+    "json_schema_version": 1
+  },
+  "benchmarks": [
+    {
+      "name": "bench_submit_crossing_single_fill",
+      "family_index": 0,
+      "per_family_instance_index": 0,
+      "run_name": "bench_submit_crossing_single_fill",
+      "run_type": "iteration",
+      "repetitions": 1,
+      "repetition_index": 0,
+      "threads": 1,
+      "iterations": 1368366,
+      "real_time": 5.1660126162601432e+02,
+      "cpu_time": 5.1650735329582881e+02,
+      "time_unit": "ns"
+    },
+    {
+      "name": "bench_submit_non_crossing_then_cancel",
+      "family_index": 1,
+      "per_family_instance_index": 0,
+      "run_name": "bench_submit_non_crossing_then_cancel",
+      "run_type": "iteration",
+      "repetitions": 1,
+      "repetition_index": 0,
+      "threads": 1,
+      "iterations": 17597964,
+      "real_time": 4.0458430870915336e+01,
+      "cpu_time": 4.0453703280674965e+01,
+      "time_unit": "ns"
+    },
+    {
+      "name": "bench_submit_sweeps_ten_resting_orders",
+      "family_index": 2,
+      "per_family_instance_index": 0,
+      "run_name": "bench_submit_sweeps_ten_resting_orders",
+      "run_type": "iteration",
+      "repetitions": 1,
+      "repetition_index": 0,
+      "threads": 1,
+      "iterations": 547464,
+      "real_time": 1.2976900537503755e+03,
+      "cpu_time": 1.2957829501111332e+03,
+      "time_unit": "ns"
+    },
+    {
+      "name": "bench_reused_out_fills",
+      "family_index": 3,
+      "per_family_instance_index": 0,
+      "run_name": "bench_reused_out_fills",
+      "run_type": "iteration",
+      "repetitions": 1,
+      "repetition_index": 0,
+      "threads": 1,
+      "iterations": 1373232,
+      "real_time": 5.2461477376315372e+02,
+      "cpu_time": 5.2452798798746323e+02,
+      "time_unit": "ns"
+    },
+    {
+      "name": "bench_fresh_out_fills",
+      "family_index": 4,
+      "per_family_instance_index": 0,
+      "run_name": "bench_fresh_out_fills",
+      "run_type": "iteration",
+      "repetitions": 1,
+      "repetition_index": 0,
+      "threads": 1,
+      "iterations": 1303075,
+      "real_time": 5.3708052100317138e+02,
+      "cpu_time": 5.3682878345452070e+02,
+      "time_unit": "ns"
+    },
+    {
+      "name": "bench_reused_out_fills_20_way_sweep",
+      "family_index": 5,
+      "per_family_instance_index": 0,
+      "run_name": "bench_reused_out_fills_20_way_sweep",
+      "run_type": "iteration",
+      "repetitions": 1,
+      "repetition_index": 0,
+      "threads": 1,
+      "iterations": 461922,
+      "real_time": 1.5300425726340075e+03,
+      "cpu_time": 1.5258177008234566e+03,
+      "time_unit": "ns"
+    },
+    {
+      "name": "bench_fresh_out_fills_20_way_sweep",
+      "family_index": 6,
+      "per_family_instance_index": 0,
+      "run_name": "bench_fresh_out_fills_20_way_sweep",
+      "run_type": "iteration",
+      "repetitions": 1,
+      "repetition_index": 0,
+      "threads": 1,
+      "iterations": 438198,
+      "real_time": 1.5865084473981979e+03,
+      "cpu_time": 1.5891929310490145e+03,
+      "time_unit": "ns"
+    }
+  ]
+}

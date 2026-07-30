@@ -74,8 +74,10 @@ enum class RejectReason : std::uint8_t {
     InvalidPrice,
     InvalidQuantity,
     UnknownSymbol,
-    UnknownOrder,       // cancel/replace referencing a nonexistent/filled order
+    UnknownOrder,        // cancel/replace referencing a nonexistent/filled order
     DuplicateOrderId,
+    FokNotFillable,      // fill-or-kill couldn't be fully satisfied immediately; nothing was filled
+    BookCapacityExceeded,  // resting the order would exceed the book's fixed order capacity
     RiskMaxOrderSize,
     RiskMaxPosition,
     RiskMaxLoss,

@@ -281,3 +281,41 @@ vector instead. Neither this codebase nor this document tests real
 market-data clustering directly (e.g. a Gaussian/exponential distribution
 of resting prices around a moving touch) — that's a natural follow-up
 benchmark, called out here rather than silently assumed away.
+
+## Matching engine: caller-provided fill buffer vs. returning a fresh vector
+
+**Decision:** `MatchingEngine::submit()`/`replace()` append `Fill` events to
+a `std::vector<Fill>&` the caller passes in, rather than returning a
+`std::vector<Fill>` by value. The first implementation did the latter —
+this section exists because benchmarking the matching engine (not writing
+it) is what surfaced the allocation, at the one place in this codebase
+where "no allocation on the hot path" was quietly not true despite being
+true everywhere else (ring buffers, pools, the order book itself).
+
+**Data** (`artifacts/bench_matching_engine.json`, single core pinned,
+`Iterations` auto-tuned, `cv` ≤ 0.9% across 3 repetitions — see the file
+for the repeated-run stddev):
+
+| Scenario | Reused `out_fills` | Fresh vector per call | Difference |
+|---|---:|---:|---:|
+| 1 fill per call  | 526 ns | 526 ns  | ~0 (noise-level) |
+| 20 fills per call | 1,520 ns | 1,583 ns | +63 ns (+4.1%) |
+
+**Reading the data:** the improvement is real and in the expected
+direction (grows with fill count, since a fresh vector pays repeated
+reallocate-and-copy steps as it grows past its small initial capacity),
+but it's far more modest than the 6–13x differences found for
+`SlabPool` vs. `new`/`delete` in the memory-pool comparison. The reason
+is `Fill` itself: a small (~40-byte), trivially-copyable struct, so both
+the allocation and the copy-on-reallocation are cheap on this glibc
+(consistent with the memory-pool section's finding that small allocations
+hit a fast tcache path) — there just isn't as much to save here as there
+was for a type close enough to `Order`'s actual size to benefit from
+`SlabPool`'s zero-indirection allocate/deallocate. The fix was still worth
+making: it's a real, measured, if modest win, it costs nothing (the API
+is not meaningfully more complex — an out-parameter instead of a return
+value), and it's consistent with a codebase that otherwise avoids
+allocation on this exact path everywhere else. It's a good example of a
+case where "measure before optimizing" cuts the other way too: the
+instinct to fix it was right, but claiming a bigger win than 4% would
+have been the kind of unearned claim this whole project tries to avoid.

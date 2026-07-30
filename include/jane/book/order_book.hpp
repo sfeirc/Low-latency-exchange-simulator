@@ -64,6 +64,18 @@ public:
 
     [[nodiscard]] std::optional<std::size_t> best_index() const noexcept { return best_index_; }
 
+    // Read-only: the next-best occupied index strictly worse than `index`,
+    // if any. Does not require `index` itself to be the current best or
+    // even occupied — used to walk the whole side in priority order (see
+    // OrderBook::for_each_level), not just to relocate after a vacate.
+    [[nodiscard]] std::optional<std::size_t> next_after(std::size_t index) const noexcept {
+        if constexpr (IsBid) {
+            return (index == 0) ? std::nullopt : occupied_.find_highest_at_or_below(index - 1);
+        } else {
+            return occupied_.find_lowest_at_or_above(index + 1);
+        }
+    }
+
 private:
     [[nodiscard]] static constexpr bool is_better(std::size_t a, std::size_t b) noexcept {
         if constexpr (IsBid) {
@@ -192,6 +204,15 @@ public:
     // standard exchange semantics (see docs/correctness.md). new_sequence
     // / new_timestamp are supplied by the caller for the same determinism
     // reason as add().
+    //
+    // Deliberately does NOT check whether the new price crosses the
+    // opposite side — this is a pure book-storage operation with no
+    // notion of matching, same as add(). A replace whose new price is
+    // marketable must go through jane::matching::MatchingEngine::replace()
+    // instead, which cancels here and re-submits through the same
+    // crossing-aware path a brand new order takes; calling this directly
+    // with a marketable price would rest a crossed book, which is exactly
+    // the invariant docs/correctness.md checks for.
     [[nodiscard]] std::expected<void, ReplaceError> replace(OrderId id, Price new_price,
                                                               Quantity new_quantity,
                                                               Sequence new_sequence,
@@ -255,6 +276,24 @@ public:
             return nullptr;
         }
         return level_for(side, *index_opt).head;
+    }
+
+    // Visits occupied levels for `side` from best to worst, calling
+    // visit(price, level) for each; stops early the first time visit
+    // returns false. Read-only traversal — used by
+    // jane::matching::MatchingEngine's fill-or-kill pre-check (sum
+    // available quantity without mutating anything) and by
+    // jane::marketdata's snapshot builder (top-N depth).
+    template <typename Visitor>
+    void for_each_level(Side side, Visitor&& visit) const {
+        std::optional<std::size_t> idx = (side == Side::Buy) ? bids_.best_index() : asks_.best_index();
+        while (idx.has_value()) {
+            const PriceLevel& lvl = level_for(side, *idx);
+            if (!visit(price_at(*idx), lvl)) {
+                return;
+            }
+            idx = (side == Side::Buy) ? bids_.next_after(*idx) : asks_.next_after(*idx);
+        }
     }
 
     [[nodiscard]] const OrderNode* find(OrderId id) const noexcept {
