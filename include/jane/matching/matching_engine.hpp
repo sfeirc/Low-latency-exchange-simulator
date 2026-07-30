@@ -22,6 +22,7 @@ namespace jane::matching {
 // price — the aggressor gets price improvement whenever their limit was
 // better than what they actually paid, never price degradation.
 struct Fill {
+    std::uint64_t match_id;  // unique per fill, monotonic within a MatchingEngine — for the public trade feed / audit trail
     OrderId resting_order_id;
     ClientId resting_client_id;
     OrderId aggressor_order_id;
@@ -235,6 +236,7 @@ private:
             const bool resting_fully_filled = (fill_qty.value() == resting->order.remaining.value());
 
             out_fills.push_back(Fill{
+                .match_id = next_match_id_++,
                 .resting_order_id = resting->order.id,
                 .resting_client_id = resting->order.client,
                 .aggressor_order_id = aggressor.id,
@@ -257,6 +259,7 @@ private:
     }
 
     Book book_;
+    std::uint64_t next_match_id_ = 1;
 };
 
 }  // namespace jane::matching

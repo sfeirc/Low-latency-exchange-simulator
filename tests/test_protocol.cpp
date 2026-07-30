@@ -86,15 +86,20 @@ TEST_CASE("ExecutionReportMessage round-trips", "[protocol]") {
 }
 
 TEST_CASE("TradeMessage and BookDeltaMessage round-trip", "[protocol]") {
-    const TradeMessage trade{
-        .match_id = 1, .price = 10'000, .quantity = 10, .symbol_id = 1, .aggressor_side = Side::Sell};
+    const TradeMessage trade{.sequence = 1,
+                              .match_id = 1,
+                              .price = 10'000,
+                              .quantity = 10,
+                              .symbol_id = 1,
+                              .aggressor_side = Side::Sell};
     std::array<std::byte, 64> tbuf{};
     const std::size_t twritten = encode(std::span(tbuf), trade);
     const auto tresult = decode<TradeMessage>(std::span(tbuf).first(twritten));
     REQUIRE(tresult.status == DecodeStatus::Ok);
     REQUIRE(tresult.payload.aggressor_side == Side::Sell);
 
-    const BookDeltaMessage delta{.price = 10'000,
+    const BookDeltaMessage delta{.sequence = 1,
+                                  .price = 10'000,
                                   .aggregate_quantity = 500,
                                   .symbol_id = 1,
                                   .order_count = 4,
@@ -175,7 +180,8 @@ TEST_CASE("peek_header + dispatch parses a stream of mixed message types in orde
     offset += encode(std::span(stream).subspan(offset),
                       CancelOrderMessage{.order_id = 1, .client_id = 1, .symbol_id = 1});
     offset += encode(std::span(stream).subspan(offset),
-                      TradeMessage{.match_id = 1,
+                      TradeMessage{.sequence = 1,
+                                   .match_id = 1,
                                    .price = 100,
                                    .quantity = 10,
                                    .symbol_id = 1,

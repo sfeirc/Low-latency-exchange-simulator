@@ -12,6 +12,7 @@ set(JANE_TEST_SOURCES
   test_matching_engine.cpp
   test_correctness_invariants.cpp
   test_risk_engine.cpp
+  test_market_data_publisher.cpp
 )
 
 add_executable(jane_tests ${JANE_TEST_SOURCES})

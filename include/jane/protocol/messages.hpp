@@ -110,6 +110,7 @@ static_assert(std::is_trivially_copyable_v<ExecutionReportMessage>);
 // --- market data: exchange -> everyone ------------------------------------
 
 struct TradeMessage {
+    std::uint64_t sequence;  // feed sequence number — gap detection for subscribers
     std::uint64_t match_id;
     std::int64_t price;
     std::int64_t quantity;
@@ -117,12 +118,19 @@ struct TradeMessage {
     Side aggressor_side;  // side of the order that crossed the spread
     std::uint8_t reserved[3]{};
 };
-static_assert(sizeof(TradeMessage) == 32);
+static_assert(sizeof(TradeMessage) == 40);
 static_assert(std::is_trivially_copyable_v<TradeMessage>);
 
-enum class DeltaAction : std::uint8_t { Add = 0, Update = 1, Delete = 2 };
+// Add/Update collapse to one action deliberately: a depth feed at the
+// price-level granularity (not per-order) has no meaningful difference
+// between "this price is now occupied for the first time" and "this
+// price's aggregate changed" — a subscriber applies both the same way
+// (upsert the level to this aggregate/count). Real MBP-style feeds work
+// the same way; only Delete needs to be distinct (remove the level).
+enum class DeltaAction : std::uint8_t { Update = 0, Delete = 1 };
 
 struct BookDeltaMessage {
+    std::uint64_t sequence;  // feed sequence number — gap detection for subscribers
     std::int64_t price;
     std::int64_t aggregate_quantity;  // new total resting quantity at this level; 0 if Delete
     std::uint32_t symbol_id;
@@ -131,7 +139,7 @@ struct BookDeltaMessage {
     DeltaAction action;
     std::uint8_t reserved[6]{};
 };
-static_assert(sizeof(BookDeltaMessage) == 32);
+static_assert(sizeof(BookDeltaMessage) == 40);
 static_assert(std::is_trivially_copyable_v<BookDeltaMessage>);
 
 // A full snapshot is inherently variable-length (top-of-book through
