@@ -15,7 +15,7 @@
 namespace jane::marketdata {
 
 // Retains every published byte in memory, in order — used by tests and by
-// the live book viewer / animation recorder (jane::book_viewer), which
+// apps/bookview (the live book viewer / animation-frame recorder), which
 // need to read back exactly what was published rather than just confirm
 // it was.
 class InMemorySink {

@@ -18,7 +18,7 @@ decision was made, with comparative data, not opinion.
               |
       Binary protocol parser
               |
-      Lock-free event pipeline        (SPSC per client -> sequencer -> MPSC fan-in)
+      Lock-free event pipeline        (N clients -> per-client SPSC -> fan-in sequencer)
               |
        Limit Order Book engine        (price/time priority, FIFO per level)
               |
@@ -32,24 +32,25 @@ threading model, and message flow.
 
 ## Features
 
-- [ ] Limit order book: price/time priority, FIFO per price level
-- [ ] Order types: limit, market, cancel, replace
-- [ ] FIFO matching with partial fills
-- [ ] Market data: full snapshots + incremental deltas
-- [ ] Deterministic replay (historical log or seeded synthetic flow) for bug repro
-- [ ] Pre-trade risk: max order size, max position, max loss, kill switch
-- [ ] Strategy simulators: market maker, VWAP, arbitrage
-- [ ] Latency benchmarks: p50/p99/p99.9 per operation, measured not claimed
-- [ ] Correctness suite: volume conservation, strict FIFO, no crossed/impossible trades
+- [x] Limit order book: price/time priority, FIFO per price level
+- [x] Order types: limit, market, cancel, replace
+- [x] FIFO matching with partial fills
+- [x] Market data: full snapshots + incremental deltas
+- [x] Deterministic replay (historical log or seeded synthetic flow) for bug repro
+- [x] Pre-trade risk: max order size, max position, max loss, kill switch
+- [x] Strategy simulators: market maker, VWAP, arbitrage
+- [x] Latency benchmarks: p50/p99/p99.9 per operation, measured not claimed
+- [x] Correctness suite: volume conservation, strict FIFO, no crossed/impossible trades
 
-(Checklist reflects implementation status — see open tasks for what's in flight.)
+Every box above is backed by tests, not just present in source — see
+[`docs/correctness.md`](docs/correctness.md) for what's checked and where.
 
 ## Repository layout
 
 ```
 include/jane/    public headers (the engine is largely header-only templates)
-  core/          strong types: Price, Quantity, OrderId, Order
-  concurrency/   SPSC/MPSC ring buffers
+  core/          strong types: Price, Quantity, OrderId, Sequence, ClientId, SymbolId, Nanos, PnL, Order
+  concurrency/   SPSC/MPSC ring buffers, multi-client fan-in sequencer
   memory/        slab allocator / pmr pools
   protocol/      binary wire messages, encode/decode
   book/          limit order book (ladder / flat-vector / std::map backends)
@@ -59,11 +60,13 @@ include/jane/    public headers (the engine is largely header-only templates)
   replay/        replay engine + synthetic order-flow generator
   strategy/      market maker / VWAP / arbitrage simulators
   metrics/       latency histograms, counters
+  correctness/   structural invariant checker (volume, FIFO, no crossed book)
 src/             non-template implementation
-apps/            executables (exchange server, replay tool, book viewer, strategy runner)
+apps/            bookview: live terminal order-book viewer + JSON session recorder
 tests/           Catch2 unit + property/invariant tests
 bench/           Google Benchmark micro + end-to-end harness
-tools/           Python: benchmark analysis, book-state visualization
+tools/           benchmark runner (shell) + results analyzer (Python)
+artifacts/       benchmark results (JSON) and the recorded-session animation (HTML)
 docs/            architecture, benchmarks, trade-offs, correctness write-ups
 ```
 
@@ -101,6 +104,25 @@ See [`docs/benchmarks.md`](docs/benchmarks.md) for the results this
 actually produced, and [`docs/tradeoffs.md`](docs/tradeoffs.md) for the
 comparative benchmarks (SPSC cached-vs-naive, MPSC fan-in-vs-CAS, price-index
 ladder-vs-tree-vs-vector, ...) behind each design decision.
+
+## Live viewer and order-book animation
+
+`apps/bookview` drives the real pipeline (`ReplayEngine` over
+`MatchingEngine` + `RiskEngine` + `MarketDataPublisher`) through seeded
+synthetic order flow and renders the live book as an ANSI terminal ladder:
+
+```sh
+./build/apps/bookview --seed=2026 --orders=6000 --interval=20 --depth=10
+```
+
+`--record-json=PATH` captures periodic book snapshots to a JSON array
+instead of (or alongside) the terminal render.
+[`artifacts/book_animation.html`](artifacts/book_animation.html) is a
+self-contained replay of exactly that: 300 real frames captured this way
+(seed `2026`, 6000 orders), with a price ladder, a cumulative-depth chart,
+a trade tape, and playback controls — open the file directly in a
+browser, no server required. Every number in it is real matching-engine
+output; nothing is synthesized for the visualization.
 
 ## License
 
