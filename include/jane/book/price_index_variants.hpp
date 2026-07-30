@@ -52,7 +52,7 @@ public:
 
 private:
     Bitmap occupied_;
-    std::optional<std::size_t> best_;
+    std::optional<std::size_t> best_ = std::nullopt;
 };
 
 // std::set<Price>: a red-black tree, the standard "ordered associative

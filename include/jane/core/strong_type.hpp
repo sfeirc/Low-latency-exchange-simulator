@@ -33,7 +33,23 @@ public:
     friend constexpr auto operator<=>(const StrongId&, const StrongId&) noexcept = default;
 
 private:
+    // GCC's -Wnull-dereference (RelWithDebInfo -O3, non-native arch — see
+    // .github/workflows/ci.yml) false-positives here once the defaulted
+    // <=> above gets inlined several frames deep through std::min/std::max
+    // at a call site (e.g. MatchingEngine::match_against_book). There is no
+    // pointer or reference anywhere in this class — value_ is a plain
+    // by-value Underlying — so the diagnostic cannot correspond to a real
+    // defect; suppressed narrowly right at the member it's attributed to
+    // rather than disabling the warning project-wide, where it's a
+    // genuinely useful check.
+#if defined(__GNUC__) && !defined(__clang__)
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wnull-dereference"
+#endif
     Underlying value_{};
+#if defined(__GNUC__) && !defined(__clang__)
+#pragma GCC diagnostic pop
+#endif
 };
 
 template <std::regular Underlying, typename Tag>
@@ -73,7 +89,17 @@ public:
     friend constexpr StrongAmount operator*(Underlying s, StrongAmount a) noexcept { return a *= s; }
 
 private:
+    // See the identical comment on StrongId::value_ above — same false
+    // positive, same shape, triggered here via e.g. std::min<StrongAmount>
+    // inlined into MatchingEngine::match_against_book.
+#if defined(__GNUC__) && !defined(__clang__)
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wnull-dereference"
+#endif
     Underlying value_{};
+#if defined(__GNUC__) && !defined(__clang__)
+#pragma GCC diagnostic pop
+#endif
 };
 
 template <std::regular Underlying, typename Tag>

@@ -1,5 +1,9 @@
 BasedOnStyle: Google
 Language: Cpp
+# clang-format (as of LLVM 18) has no c++23 enumerator for Standard; c++20 is
+# the closest available and only affects formatting (e.g. concept/spaceship
+# spacing) — the project's actual language standard is C++23, set via
+# CMAKE_CXX_STANDARD in the root CMakeLists.txt, and is unaffected by this.
 Standard: c++20
 ColumnLimit: 100
 IndentWidth: 4
