@@ -1,0 +1,69 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+env:
+  DEBIAN_FRONTEND: noninteractive
+
+jobs:
+  build-test:
+    name: build+test (${{ matrix.build_type }}${{ matrix.sanitizer != 'none' && format(', {0}', matrix.sanitizer) || '' }})
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - build_type: RelWithDebInfo
+            sanitizer: none
+          - build_type: Debug
+            sanitizer: asan
+          - build_type: Debug
+            sanitizer: tsan
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install toolchain
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y ninja-build catch2 libbenchmark-dev
+
+      - name: Configure
+        run: |
+          cmake -S . -B build -G Ninja \
+            -DCMAKE_BUILD_TYPE=${{ matrix.build_type }} \
+            -DJANE_NATIVE_ARCH=OFF \
+            -DJANE_WERROR=ON \
+            -DJANE_ENABLE_LTO=OFF \
+            -DJANE_ENABLE_ASAN=${{ matrix.sanitizer == 'asan' && 'ON' || 'OFF' }} \
+            -DJANE_ENABLE_TSAN=${{ matrix.sanitizer == 'tsan' && 'ON' || 'OFF' }}
+
+      - name: Build
+        run: cmake --build build -j"$(nproc)"
+
+      - name: Test
+        run: ctest --test-dir build --output-on-failure --timeout 120
+
+  benchmark-smoke:
+    name: benchmark smoke (build only, no perf claims in CI)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install toolchain
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y ninja-build catch2 libbenchmark-dev
+
+      - name: Configure
+        run: |
+          cmake -S . -B build -G Ninja \
+            -DCMAKE_BUILD_TYPE=Release \
+            -DJANE_NATIVE_ARCH=OFF \
+            -DJANE_BUILD_TESTS=OFF
+
+      - name: Build
+        run: cmake --build build -j"$(nproc)"

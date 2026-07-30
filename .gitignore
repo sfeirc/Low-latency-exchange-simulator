@@ -1,0 +1,40 @@
+# Build directories
+build/
+build-*/
+cmake-build-*/
+out/
+
+# CMake generated
+CMakeCache.txt
+CMakeFiles/
+cmake_install.cmake
+CTestTestfile.cmake
+compile_commands.json
+_deps/
+install_manifest.txt
+
+# Editors / OS
+.vscode/
+.idea/
+*.swp
+.DS_Store
+
+# Generated data (regenerate via tools/apps, don't version large binaries)
+data/recordings/*.bin
+data/recordings/*.jsonl
+artifacts/*.json
+artifacts/*.html
+!artifacts/.gitkeep
+
+# Unrelated local plugin state
+ruvector.db
+
+# ccache
+.ccache/
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/
+*.egg-info/
