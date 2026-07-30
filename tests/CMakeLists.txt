@@ -10,6 +10,7 @@ set(JANE_TEST_SOURCES
   test_order_book.cpp
   test_price_index_variants.cpp
   test_matching_engine.cpp
+  test_correctness_invariants.cpp
 )
 
 add_executable(jane_tests ${JANE_TEST_SOURCES})

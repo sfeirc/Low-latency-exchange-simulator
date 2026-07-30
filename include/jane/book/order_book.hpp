@@ -186,14 +186,24 @@ public:
         const Side node_side = node->order.side;
         PriceLevel& lvl = level_for(node_side, index);
 
-        node->order.remaining -= fill_amount;
-        if (node->order.remaining.value() == 0) {
-            level_unlink(lvl, node);  // subtracts the now-zero remaining; no double count with below
+        // fully_filled must be decided, and level_unlink (if taken) must
+        // run, *before* node->order.remaining is zeroed: level_unlink
+        // subtracts node->order.remaining from the level's aggregate, so
+        // zeroing it first (as an earlier version of this function did)
+        // makes that subtraction a silent no-op — the level's
+        // total_quantity then permanently overcounts by fill_amount,
+        // caught by tests/test_correctness_invariants.cpp's random-session
+        // property test, not by any single-scenario unit test.
+        const bool fully_filled = (fill_amount.value() == node->order.remaining.value());
+        if (fully_filled) {
+            level_unlink(lvl, node);
+            node->order.remaining -= fill_amount;
             note_maybe_empty_for(node_side, index);
             order_index_.erase(it);
             pool_.deallocate(node);
             --order_count_;
         } else {
+            node->order.remaining -= fill_amount;
             lvl.total_quantity -= fill_amount;
         }
         return {};
