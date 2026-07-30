@@ -4,6 +4,7 @@ set(JANE_TEST_SOURCES
   test_spsc_ring_buffer.cpp
   test_mpsc.cpp
   test_memory_pool.cpp
+  test_protocol.cpp
 )
 
 add_executable(jane_tests ${JANE_TEST_SOURCES})
