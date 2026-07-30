@@ -24,7 +24,7 @@ list(APPEND CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake")
 # ---------------------------------------------------------------------------
 option(JANE_BUILD_TESTS      "Build unit / property tests"        ON)
 option(JANE_BUILD_BENCH      "Build Google Benchmark suites"      ON)
-option(JANE_BUILD_APPS       "Build executables (server, tools)"  ON)
+option(JANE_BUILD_APPS       "Build executables (apps/bookview)"  ON)
 option(JANE_NATIVE_ARCH      "Compile with -march=native"         ON)
 option(JANE_ENABLE_ASAN      "Enable Address/UndefinedBehavior sanitizers" OFF)
 option(JANE_ENABLE_TSAN      "Enable ThreadSanitizer (exclusive with ASAN)" OFF)

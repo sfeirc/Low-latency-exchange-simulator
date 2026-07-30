@@ -19,8 +19,10 @@ install_manifest.txt
 *.swp
 .DS_Store
 
-# Large regeneratable inputs (synthetic/replayed market data) — regenerate
-# via apps/synth_gen or apps/replay_tool, don't version.
+# Large regeneratable inputs: a jane::marketdata::FileSink recording of a
+# synthetic or replayed session (see jane::replay::SyntheticOrderGenerator /
+# ReplayEngine, and apps/bookview for the same idea applied to book-state
+# snapshots instead of raw messages). Reproducible from a seed, don't version.
 data/recordings/*.bin
 data/recordings/*.jsonl
 
