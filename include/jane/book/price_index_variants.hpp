@@ -34,9 +34,35 @@ public:
     void insert(std::int64_t p) {
         const auto idx = static_cast<std::size_t>(p);
         occupied_.set(idx);
+        // GCC -Wmaybe-uninitialized false-positives on the `*best_` read
+        // below, but only once insert() gets inlined into a heavily
+        // templated call site (bench_order_book_backends.cpp's churn
+        // benchmark, instantiated per BookDepth) under -O3 (RelWithDebInfo
+        // in CI, see .github/workflows/ci.yml — Debug builds never hit
+        // this). `best_` is a std::optional<std::size_t>: has_value() is
+        // checked first and short-circuits before `*best_` is ever
+        // evaluated, and it is never left disengaged-but-read — it has a
+        // `= std::nullopt` default member initializer below and is only
+        // ever otherwise written via `best_ = idx` / `best_ = std::nullopt`
+        // in erase(). Tried both that NSDMI and an explicit
+        // mem-initializer-list write (`best_(std::nullopt)` in the
+        // constructor) as real fixes; neither changes the warning, which
+        // confirms it's GCC's optimizer losing track of the engaged-flag
+        // through the inlined std::optional machinery, not a real gap —
+        // same false-positive class already hit (and pragma-suppressed)
+        // for -Wnull-dereference in strong_type.hpp. Suppressed narrowly
+        // at this exact read rather than project-wide, where
+        // -Wmaybe-uninitialized is a genuinely useful check.
+#if defined(__GNUC__) && !defined(__clang__)
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wmaybe-uninitialized"
+#endif
         if (!best_.has_value() || idx > *best_) {
             best_ = idx;
         }
+#if defined(__GNUC__) && !defined(__clang__)
+#pragma GCC diagnostic pop
+#endif
     }
     void erase(std::int64_t p) {
         const auto idx = static_cast<std::size_t>(p);
