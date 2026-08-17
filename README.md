@@ -1,5 +1,9 @@
 # JANE
 
+[![CI](https://github.com/sfeirc/Low-latency-exchange-simulator/actions/workflows/ci.yml/badge.svg)](https://github.com/sfeirc/Low-latency-exchange-simulator/actions/workflows/ci.yml)
+![C++23](https://img.shields.io/badge/C%2B%2B-23-blue.svg)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+
 A from-scratch electronic exchange core, in modern C++23: order entry, a
 price/time-priority limit order book, FIFO matching, pre-trade risk controls,
 a binary market-data feed, and the plumbing (lock-free ring buffers, a slab
@@ -10,6 +14,21 @@ Built to be *measured*, not asserted: every number below came from `bench/`
 running on a pinned core, reproducible via `tools/`. See
 [`docs/tradeoffs.md`](docs/tradeoffs.md) for why each design decision was
 made, with comparative data, not opinion.
+
+## Why this matters across industries
+
+A simulated exchange with a real price/time-priority matching engine, deterministic replay, and
+measured (not claimed) latency is core market-infrastructure tooling — trading firms, exchanges, and
+vendors all need exactly this kind of harness to test strategies and infrastructure before touching a
+real venue. But the underlying systems-engineering discipline transfers well beyond finance: building
+a deterministic simulation with a measured, realistic latency/throughput profile, and treating every
+performance and correctness claim as something to benchmark and test rather than assert, is exactly
+what's needed for any tech domain that requires a trustworthy test harness for a latency-sensitive
+distributed system — a matching engine is, structurally, just a demanding single-writer state machine
+fed by concurrent producers, a shape that recurs constantly outside trading. The same discipline
+applies directly to industrial control-system testing too: simulating realistic network and latency
+conditions to validate SCADA/ICS software under load is the same class of problem — a deterministic,
+measurable stand-in for a real, hard-to-instrument production environment.
 
 ## The order book, live
 
